@@ -23,7 +23,7 @@ class Solution:
                 if A[l]==0:
 
                     z-=1
-
+#Correct but after the deadline
                 l+=1
 
             r+=1
