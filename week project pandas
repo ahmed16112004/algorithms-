@@ -1,0 +1,54 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+exams_data = {'Date': pd.to_datetime(['2024-05-01', '2024-04-25', '2024-04-20', '2024-04-15', '2024-04-10', '2024-04-05', '2024-03-31', '2024-03-25']),
+              'Subject': ['Math', 'Physics', 'Chemistry', 'Biology', 'History', 'English', 'Literature', 'Geography'],
+              'Mark': [85, 78, 92, 67, 80, 95, 72, 88]}
+exams_df = pd.DataFrame(exams_data)
+
+try:
+  online_food_df = pd.read_csv("online_food.csv")
+except FileNotFoundError:
+  print("Error: 'online_food.csv' not found. Please download the dataset and try again.")
+  exit()
+
+try:
+  online_food_df.drop(columns=['longitude', 'latitude'], inplace=True)
+except KeyError:
+  print("Warning: 'longitude' or 'latitude' columns not found in the dataset.")
+
+min_age = online_food_df['Age'].min()
+max_age = online_food_df['Age'].max()
+print(f"Minimum Age: {min_age}")
+print(f"Maximum Age: {max_age}")
+
+occupation_mean_age = online_food_df.groupby('Occupation')['Age'].mean(skipna=True)
+print(occupation_mean_age)
+
+gender_income_family_size = online_food_df.groupby(['Gender', 'Monthly Income'])['Family Size'].mean(skipna=True)
+print(gender_income_family_size)
+
+marital_education_positives = online_food_df.groupby(['Marital Status', 'Education'])['Positive Feedbacks'].count()
+print(marital_education_positives)
+
+online_food_df['Big Family'] = online_food_df['Family Size'].apply(lambda x: 'True' if x > 4 else 'False')
+
+try:
+  education_mapping = {"Bachelors": 1, "Masters": 2, "PhD": 3, ...}  # Define your mapping (optional)
+  online_food_df["Education_Num"] = online_food_df["Education"].replace(education_mapping)
+  plt.figure(figsize=(10, 6))
+  online_food_df.groupby('Education_Num')['Age'].mean().plot(kind='hist')
+except (KeyError, ValueError):  # Handle cases where "Education" is not convertible
+  plt.figure(figsize=(10, 6))
+  online_food_df.groupby('Education')['Age'].mean().plot(kind='hist')
+plt.xlabel("Education Qualifications")
+plt.ylabel("Mean Age")
+plt.title("Mean Age Distribution by Education")
+plt.show()
+
+plt.figure(figsize=(12, 6))
+online_food_df.groupby('Gender')['Positive Feedbacks'].hist(alpha=0.5, label='Positive')
+online_food_df.groupby('Gender')['Negative Feedbacks'].hist(alpha=0.5, label='Negative')
+plt.xlabel("Gender")
+plt.ylabel("Number of Feedbacks")
+plt.title("Distribution
