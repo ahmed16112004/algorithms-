@@ -1,0 +1,22 @@
+def min_difference(weights):
+    left, right = 0, sum(weights)
+    while left < right:
+        mid = (left + right) // 2
+        if is_possible(weights, mid):
+            right = mid
+        else:
+            left = mid + 1
+    return left
+def is_possible(weights, difference):
+    n = len(weights)
+    return can_divide(weights, 0, n - 1, difference)
+def can_divide(weights, left, right, difference):
+    if left > right:
+        return False
+    if left == right:
+        return True
+    if weights[left] > difference:
+        return can_divide(weights, left + 1, right, difference)
+    if weights[right] <= difference:
+        return can_divide(weights, left, right - 1, difference)
+    return can_divide(weights, left + 1, right, difference - weights[left]) or can_divide(weights, left, right - 1, difference)
