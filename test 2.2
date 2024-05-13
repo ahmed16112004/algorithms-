@@ -1,0 +1,22 @@
+def min_board_size(w, h, n):
+  total_area = w * h * n
+  low, high = max(w, h), total_area
+  while low <= high:
+    size = (low + high) // 2
+    grid = [[False for _ in range(size)] for _ in range(size)]
+    placed = 0
+    for _ in range(n):
+      found = False
+      for i in range(size - w + 1):
+        for j in range(size - h + 1):
+          if all(not grid[x][y] for x, y in [(a, b) for a in range(i, i + w) for b in range(j, j + h)]):
+            placed += 1
+            found = True
+            break
+        if placed == n:
+          break
+    if found:
+      high = size - 1
+    else:
+      low = size + 1
+  return low
