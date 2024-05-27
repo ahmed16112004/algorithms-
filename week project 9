@@ -1,0 +1,21 @@
+def min_flips_greedy(A):
+  total_sum = sum(A)
+  target_sum = total_sum // 2
+  flips = 0
+  for num in A:
+    if num > target_sum:
+      flips += 1
+      target_sum -= num
+  return flips
+def min_flips_brute_force(A):
+  n = len(A)
+  min_flips = float('inf')
+  for i in range(2**n):
+    flips = 0
+    current_sum = 0
+    for j in range(n):
+      if (i >> j) & 1:
+        flips += 1
+      current_sum += A[j]
+    min_flips = min(min_flips, flips) if current_sum >= 0 else float('inf')
+  return min_flips if min_flips != float('inf') else 0
